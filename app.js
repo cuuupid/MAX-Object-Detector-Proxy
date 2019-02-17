@@ -18,8 +18,8 @@ const creds = {key: privKey, cert: cert}
 const https = require('https')
 
 const getPrediction = image_url => new Promise((s, j) => {
-  request.post({ url: 'http://127.0.0.1:5000/model/predict' }, formData: {image: image_url}, (e, s, b) => {
-    if (err) throw e;
+  request.post({ url: 'http://127.0.0.1:5000/model/predict', formData: {image: image_url}}, (e, _, b) => {
+    if (e) throw e;
     s(JSON.parse(b));
   })
 })
