@@ -25,7 +25,10 @@ const getPrediction = image_url => new Promise((s, j) => {
 })
 
 const save = multer({
-  dest: './static'
+  dest: './static',
+  filename: (q, f, cb) => {
+    cb(null, crypto.randomBytes(6).toString('hex') + '.' + mime.extension(file.mimetype))
+  }
 })
 
 const uwu = _=>_
