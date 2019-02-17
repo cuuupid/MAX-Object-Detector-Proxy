@@ -17,19 +17,22 @@ const cert = fs.readFileSync(process.env.CERT)
 const creds = {key: privKey, cert: cert}
 const https = require('https')
 
-const getPrediction = image_url => new Promise((s, j) => {
-  request.post({ url: 'http://127.0.0.1:5000/model/predict', formData: {image: image_url}}, (e, _, b) => {
+const getPrediction = image_uri => new Promise((s, j) => {
+  request.post({ url: 'http://127.0.0.1:5000/model/predict', formData: {
+    'image': fs.createReadStream('./static/' + image_uri)
+  }}, (e, _, b) => {
     if (e) throw e;
     s(JSON.parse(b));
   })
 })
 
-const save = multer({
-  dest: './static',
+const path = require('path')
+const save = multer({ storage: multer.diskStorage({
+  destination: './static',
   filename: (q, f, cb) => {
-    cb(null, crypto.randomBytes(6).toString('hex') + '.' + mime.extension(file.mimetype))
+    cb(null, crypto.randomBytes(6).toString('hex') + path.extname(f.originalname))
   }
-})
+})})
 
 const uwu = _=>_
 
