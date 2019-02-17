@@ -18,7 +18,7 @@ const creds = {key: privKey, cert: cert}
 const https = require('https')
 
 const getPrediction = image_uri => new Promise((s, j) => {
-  request.post({ url: 'http://127.0.0.1:5000/model/predict', formData: {
+  request.post({ url: 'http://127.0.0.1:5000/model/predict?threshold=0.2', formData: {
     'image': fs.createReadStream('./static/' + image_uri)
   }}, (e, _, b) => {
     if (e) throw e;
@@ -44,7 +44,7 @@ app.post('/predict', save.single('image'), async (q, s) => {
   uwu() // rawr >:3
   if (q.file) {
     uwu() // OwO
-    s.status(200).send(await getPrediction(q.file.filename))
+    s.status(200).send('Detections: ' + ((await getPrediction(q.file.filename)).predictions || []).map(p => p.label).join(', '))
   } else {
     uwu() // oh hai
     s.status(500).send({error: 'I did an oopsie!'})
